@@ -1,33 +1,30 @@
-import { Route, Switch } from "react-router-dom";
+import React from "react";
+import { Route, Routes } from "react-router-dom";
 import BookDetails from "./BookDetails";
 import BookForm from "./BookForm";
 import BookList from "./BookList";
 import Menu from "./Menu";
 import NoMatch from "./NoMatch";
-import RolesRoute from "./RolesRoute";
+import RequireRoles from "./RequireRoles";
+
 import SecretBooks from "./SecretBooks";
 
 const BookBox = () => (
-  <>
+  <React.Fragment>
     <Menu/>
-    <Switch>
-      <Route exact path="/">
-        <BookList/>
-      </Route>
-      <Route exact path="/books/new">
-        <BookForm/>
-      </Route>
-      <Route path="/books/:bookId">
-        <BookDetails/>
-      </Route>
-      <RolesRoute path="/secret" roles={['admin']}>
-        <SecretBooks/>
-      </RolesRoute>
-      <Route path="*">
-        <NoMatch/>
-      </Route>
-    </Switch>
-  </>
+    <Routes>
+      <Route path="/" element={<BookList/>}/>
+      <Route exact path="/books/new" element={<BookForm/>}/>
+      <Route path="/books/:bookId" element={<BookDetails/>}/>
+      <Route path="/secret" 
+        element={
+          <RequireRoles roles={["admin"]}>
+            <SecretBooks/>
+          </RequireRoles>
+      }/>
+      <Route path="*" element={<NoMatch/>}/>
+    </Routes>
+  </React.Fragment>
 )
 
 export default BookBox
